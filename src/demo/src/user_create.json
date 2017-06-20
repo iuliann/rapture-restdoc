@@ -1,0 +1,88 @@
+{
+  "group": "User",
+  "url": "/user",
+  "method": "POST",
+  "summary": "Create a user",
+  "description": "Create user - you must provide an app auth key.",
+  "version": "1.0",
+  "params": {
+    "nickname": {
+      "type": "string|array",
+      "format": "string(20)|string(20)[]",
+      "required": true,
+      "default": null,
+      "description": "For multiple nicknames: ['Nick1', 'Nick2']"
+    },
+    "fullname": {
+      "type": "string",
+      "format": "string(100)",
+      "required": true,
+      "description": "User's full name"
+    },
+    "group": {
+      "type": "string",
+      "format": "string(20)",
+      "required": true,
+      "description": "User's group. Possible values: admin|manager|user"
+    }
+  },
+  "responses": {
+    "201": {
+      "response": [
+        {
+          "id": "ec014a44-554f-11e7-b114-b2f933d5fe66",
+          "nickname": "Nick1",
+          "fullname": "Nicky Doe",
+          "group": "admin",
+          "api_key": "dsa09ak320ede0-awld0a0sdla"
+        },
+        {
+          "id": "d6a09dfa-554f-11e7-b114-b2f933d5fe66",
+          "nickname": "Nick2",
+          "fullname": "Nicky Doe",
+          "group": "admin",
+          "api_key": "dsa09ak320ede0-awld0a0sdla"
+        }
+      ],
+      "description": ""
+    },
+    "400": {
+      "response": {
+        "message": "Invalid group"
+      },
+      "description": "<div class='alert alert-danger'>Only 'manager' group is currently supported</div>"
+    }
+  },
+  "examples": [
+    {
+      "request": {
+        "headers": {"X-Auth": "dsa09ak320ede0-awld0a0sdla"},
+        "params": {
+          "nickname": ["Nick1", "Nick2"],
+          "fullname": "Nick Doe",
+          "group": "admin"
+        },
+        "query": {}
+      },
+      "response": {
+        "code": 201,
+        "json": [
+          {
+            "id": "ec014a44-554f-11e7-b114-b2f933d5fe66",
+            "nickname": "Nick1",
+            "fullname": "Nicky Doe",
+            "group": "admin",
+            "api_key": "dsa09ak320ede0-awld0a0sdla"
+          },
+          {
+            "id": "d6a09dfa-554f-11e7-b114-b2f933d5fe66",
+            "nickname": "Nick2",
+            "fullname": "Nicky Doe",
+            "group": "admin",
+            "api_key": "dsa09ak320ede0-awld0a0sdla"
+          }
+        ]
+      }
+    }
+  ]
+}

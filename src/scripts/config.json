@@ -1,0 +1,42 @@
+{
+  "template": "default",
+  "project": "REST API project",
+  "description": "REST API project description",
+  "baseUrl": "http://api.example.com",
+  "examples": ["cURL", "PHP", "Go"],
+
+  "default": {
+    "version": "1.0",
+    "headers": {
+      "X-Auth": {
+        "type": "string",
+        "format": "string(64)",
+        "required": true,
+        "description": "User's auth key"
+      }
+    },
+    "responses": {
+      "401": {
+        "response": {
+          "error": 401,
+          "message": "Unauthorized!"
+        },
+        "description": "401 Unauthorized"
+      },
+      "403": {
+        "response": {
+          "error": 403,
+          "message": "Forbidden!"
+        },
+        "description": "403 Forbidden"
+      },
+      "500": {
+        "response": {
+          "error": 500,
+          "message": "Internal Server Error! Please try again later."
+        },
+        "description": "500 Internal Server Error"
+      }
+    }
+  }
+}

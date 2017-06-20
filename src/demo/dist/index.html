@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/railscasts.min.css">
+    <style>/*
+ * Base structure
+ */
+
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+    padding-top: 50px;
+}
+
+/*
+ * Typography
+ */
+
+h1 {
+    margin-bottom: 20px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid #eee;
+}
+
+/*
+ * Sidebar
+ */
+
+.sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    border-right: 1px solid #eee;
+}
+
+/* Sidebar navigation */
+.sidebar {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.sidebar .nav {
+    margin-bottom: 20px;
+}
+
+.sidebar .nav-item {
+    width: 100%;
+}
+
+.sidebar .nav-item + .nav-item {
+    margin-left: 0;
+}
+
+.sidebar .nav-link {
+    border-radius: 0;
+}
+
+/*
+ * Dashboard
+ */
+
+/* Placeholders */
+.placeholders {
+    padding-bottom: 3rem;
+}
+
+.placeholder img {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+/*
+ * Custom
+ */
+.endpoint {
+    border: 4px solid #ddd;
+    padding: 12px;
+    margin-bottom: 12px;
+}
+.hide {
+    display: none;
+}
+h4 {
+    margin-top: 2em;
+}
+.alert strong {
+    color: #000 !important;
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+    <button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <a class="navbar-brand" href="#">REST API project</a>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="https://github.com/iuliann/rapture-restdoc">Help</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+            <ul class="nav nav-pills flex-column">
+
+                                    <li class="nav-item">
+                        <a class="nav-link" href="#User">User</a>
+                    </li>
+                
+            </ul>
+        </nav>
+
+        <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+
+            
+                <h1 id="User">User</h1>
+
+                                    <div class="endpoint">
+                        <div class="alert alert-success">
+                            <button class="btn btn-success">
+                                POST                            </button>
+                            <strong>/user</strong>
+                            <span class="text-muted">Create a user</span>
+                        </div>
+
+                        <div class="explain hide">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>Create user - you must provide an app auth key.</p>
+                                </div>
+                                <div class="col-md-8 col-sm-12">
+                                                                            <div>
+                                            <h4>Headers</h4>
+                                            
+<table class="table table-striped table-hover table-responsive">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Format</th>
+            <th>Required</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+                    <td>X-Auth</td>
+                    <td>string</td>
+                    <td>string(64)</td>
+                    <td>yes</td>
+                    <td></td>
+                    <td>User's auth key</td>
+                </tr>
+    </tbody>
+</table>                                        </div>
+                                    
+
+                                                                            <div>
+                                            <h4>Params</h4>
+                                            
+<table class="table table-striped table-hover table-responsive">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Format</th>
+            <th>Required</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+                    <td>nickname</td>
+                    <td>string|array</td>
+                    <td>string(20)|string(20)[]</td>
+                    <td>yes</td>
+                    <td></td>
+                    <td>For multiple nicknames: ['Nick1', 'Nick2']</td>
+                </tr><tr>
+                    <td>fullname</td>
+                    <td>string</td>
+                    <td>string(100)</td>
+                    <td>yes</td>
+                    <td></td>
+                    <td>User's full name</td>
+                </tr><tr>
+                    <td>group</td>
+                    <td>string</td>
+                    <td>string(20)</td>
+                    <td>yes</td>
+                    <td></td>
+                    <td>User's group. Possible values: admin|manager|user</td>
+                </tr>
+    </tbody>
+</table>                                        </div>
+                                    
+                                    
+
+                                    <div>
+                                        <h4>Responses</h4>
+
+                                        <table class="table table-responsive">
+                                            <thead>
+                                                <tr>
+                                                    <th>Code</th>
+                                                    <th>Response</th>
+                                                    <th>Description</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                                                            <tr>
+                                                    <th>201</th>
+                                                    <td>
+                                                        <pre><code class="json">[
+    {
+        "id": "ec014a44-554f-11e7-b114-b2f933d5fe66",
+        "nickname": "Nick1",
+        "fullname": "Nicky Doe",
+        "group": "admin",
+        "api_key": "dsa09ak320ede0-awld0a0sdla"
+    },
+    {
+        "id": "d6a09dfa-554f-11e7-b114-b2f933d5fe66",
+        "nickname": "Nick2",
+        "fullname": "Nicky Doe",
+        "group": "admin",
+        "api_key": "dsa09ak320ede0-awld0a0sdla"
+    }
+]</code></pre>
+                                                    </td>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>400</th>
+                                                    <td>
+                                                        <pre><code class="json">{
+    "message": "Invalid group"
+}</code></pre>
+                                                    </td>
+                                                    <td>
+                                                        <div class='alert alert-danger'>Only 'manager' group is currently supported</div>                                                    </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>401</th>
+                                                    <td>
+                                                        <pre><code class="json">{
+    "error": 401,
+    "message": "Unauthorized!"
+}</code></pre>
+                                                    </td>
+                                                    <td>
+                                                        401 Unauthorized                                                    </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>403</th>
+                                                    <td>
+                                                        <pre><code class="json">{
+    "error": 403,
+    "message": "Forbidden!"
+}</code></pre>
+                                                    </td>
+                                                    <td>
+                                                        403 Forbidden                                                    </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>500</th>
+                                                    <td>
+                                                        <pre><code class="json">{
+    "error": 500,
+    "message": "Internal Server Error! Please try again later."
+}</code></pre>
+                                                    </td>
+                                                    <td>
+                                                        500 Internal Server Error                                                    </td>
+                                                </tr>
+                                                                                        </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-12">
+                                                                            <div>
+                                            <h5>Example #1</h5>
+
+                                            <ul class="nav nav-tabs" role="tablist">
+                                                                                                    <li class="nav-item">
+                                                        <a class="nav-link active"
+                                                           data-toggle="tab"
+                                                           href="#t-063e3f6b48d281d9808578e606b9d49172abe58e"
+                                                           role="tab">cURL</a>
+                                                    </li>
+                                                                                                    <li class="nav-item">
+                                                        <a class="nav-link "
+                                                           data-toggle="tab"
+                                                           href="#t-65ef16fcdbc0f35e2e7b02dc59c4e673753fb94e"
+                                                           role="tab">PHP</a>
+                                                    </li>
+                                                                                                    <li class="nav-item">
+                                                        <a class="nav-link "
+                                                           data-toggle="tab"
+                                                           href="#t-f3c0d84fbb72938a5d8a3bb70a390f0c9bc87a38"
+                                                           role="tab">Go</a>
+                                                    </li>
+                                                                                            </ul>
+
+                                            <!-- Tab panes -->
+                                            <div class="tab-content">
+                                                                                                    <div class="tab-pane active"
+                                                         id="t-063e3f6b48d281d9808578e606b9d49172abe58e"
+                                                         role="tabpanel">
+                                                        <pre><code class="bash">curl -X POST \
+http://api.example.com/user \
+-H 'cache-control: no-cache' \
+-H 'content-type: application/json' \
+-H 'X-Auth: dsa09ak320ede0-awld0a0sdla' \
+-d '{
+    "nickname": [
+        "Nick1",
+        "Nick2"
+    ],
+    "fullname": "Nick Doe",
+    "group": "admin"
+}'</code></pre>
+                                                    </div>
+                                                                                                    <div class="tab-pane "
+                                                         id="t-65ef16fcdbc0f35e2e7b02dc59c4e673753fb94e"
+                                                         role="tabpanel">
+                                                        <pre><code class="php">// @todo</code></pre>
+                                                    </div>
+                                                                                                    <div class="tab-pane "
+                                                         id="t-f3c0d84fbb72938a5d8a3bb70a390f0c9bc87a38"
+                                                         role="tabpanel">
+                                                        <pre><code class="go"># @todo</code></pre>
+                                                    </div>
+                                                                                            </div>
+
+                                            <div>
+                                                <strong>HTTP: 201</strong>
+                                                <pre><code class="json">[
+    {
+        "id": "ec014a44-554f-11e7-b114-b2f933d5fe66",
+        "nickname": "Nick1",
+        "fullname": "Nicky Doe",
+        "group": "admin",
+        "api_key": "dsa09ak320ede0-awld0a0sdla"
+    },
+    {
+        "id": "d6a09dfa-554f-11e7-b114-b2f933d5fe66",
+        "nickname": "Nick2",
+        "fullname": "Nicky Doe",
+        "group": "admin",
+        "api_key": "dsa09ak320ede0-awld0a0sdla"
+    }
+]</code></pre>
+                                            </div>
+                                        </div>
+                                                                    </div>
+                            </div>
+
+                        </div>
+                    </div>
+                
+                    </main>
+    </div>
+</div>
+
+<!-- jQuery first, then Tether, then Bootstrap JS. -->
+<script src="http://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script type="application/javascript">hljs.initHighlightingOnLoad();
+jQuery(document).ready(function(){
+    $('.alert').on('click', function(e){
+        $(this).parent().find('.explain').toggleClass('hide');
+    });
+
+    $('.nav-tabs a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    })
+});
+</script>
+</body>
+</html>

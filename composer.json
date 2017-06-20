@@ -1,0 +1,17 @@
+{
+  "name": "iuliann/rapture-restdoc",
+  "description": "Rapture REST Documentation Generator",
+  "keywords": ["library"],
+  "homepage": "http://rapture.iuliann.ro",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Iulian N.",
+      "homepage": "http://iuliann.ro",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.0.4"
+  }
+}
