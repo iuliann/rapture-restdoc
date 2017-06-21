@@ -65,28 +65,18 @@ $restMethods   = [
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="https://github.com/iuliann/rapture-restdoc">Help</a>
-            </li>
+            <?php foreach ($restGroups as $group): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="#<?= $group ?>"><?= $group ?></a>
+                </li>
+            <?php endforeach; ?>
         </ul>
     </div>
 </nav>
 
 <div class="container-fluid">
     <div class="row">
-        <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
-            <ul class="nav nav-pills flex-column">
-
-                <?php foreach ($restGroups as $group): ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#<?= $group ?>"><?= $group ?></a>
-                    </li>
-                <?php endforeach; ?>
-
-            </ul>
-        </nav>
-
-        <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+        <div class="col-md-12">
 
             <?php foreach ($restGroups as $group): ?>
 
@@ -104,71 +94,81 @@ $restMethods   = [
 
                         <div class="explain hide">
                             <div class="row">
-                                <div class="col-md-12">
+                                <!-- Description -->
+                                <div class="col-md-12 col-sm-12">
+                                    <h3>Description</h3>
                                     <p><?= $endpoint['description'] ?></p>
                                 </div>
-                                <div class="col-md-8 col-sm-12">
-                                    <?php if (count($endpoint['headers'])): ?>
+
+                                <!-- Request -->
+                                <div class="col-md-6 col-sm-12">
+                                    <h3>Request</h3>
+                                    <?php if (count($endpoint['request']['headers'])): ?>
                                         <div>
                                             <h4>Headers</h4>
-                                            <?= $tableRender($endpoint['headers']) ?>
+                                            <?= $tableRender($endpoint['request']['headers']) ?>
                                         </div>
                                     <?php endif; ?>
 
-
-                                    <?php if (count($endpoint['params'])): ?>
+                                    <?php if (count($endpoint['request']['params'])): ?>
                                         <div>
-                                            <h4>Params</h4>
-                                            <?= $tableRender($endpoint['params']) ?>
+                                            <h4>Parameters</h4>
+                                            <?= $tableRender($endpoint['request']['params']) ?>
                                         </div>
                                     <?php endif; ?>
 
-                                    <?php if (count($endpoint['query'])): ?>
+                                    <?php if (count($endpoint['request']['body'])): ?>
+                                        <div>
+                                            <h4>Body</h4>
+                                            <?= $tableRender($endpoint['request']['body']) ?>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if (count($endpoint['request']['query'])): ?>
                                         <div>
                                             <h4>Query</h4>
-                                            <?= $tableRender($endpoint['query']) ?>
+                                            <?= $tableRender($endpoint['request']['query']) ?>
                                         </div>
                                     <?php endif; ?>
-
-
-                                    <div>
-                                        <h4>Responses</h4>
-
-                                        <table class="table table-responsive">
-                                            <thead>
-                                                <tr>
-                                                    <th>Code</th>
-                                                    <th>Response</th>
-                                                    <th>Description</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php foreach ($endpoint['responses'] as $httpCode => $data): ?>
-                                                <tr>
-                                                    <th><?= $httpCode ?></th>
-                                                    <td>
-                                                        <pre><code class="json"><?= json_encode($data['response'], JSON_PRETTY_PRINT) ?></code></pre>
-                                                    </td>
-                                                    <td>
-                                                        <?= $data['description'] ?>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
                                 </div>
-                                <div class="col-md-4 col-sm-12">
-                                    <?php if (isset($endpoint['examples'][0])): ?>
-                                        <div>
-                                            <h5>Example #1</h5>
 
+                                <!-- Response -->
+                                <div class="col-md-6 col-sm-12">
+                                    <h3>Response</h3>
+                                    <table class="table table-responsive">
+                                        <thead>
+                                            <tr>
+                                                <th>Code</th>
+                                                <th>Response</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach ($endpoint['response'] as $response): ?>
+                                            <tr>
+                                                <th><?= $response['code'] ?></th>
+                                                <td>
+                                                    <pre><code class="json"><?= json_encode($response['json'], JSON_PRETTY_PRINT) ?></code></pre>
+                                                </td>
+                                                <td>
+                                                    <?= $response['description'] ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <?php if (isset($endpoint['example'][0])): ?>
+                                    <!-- Examples -->
+                                    <div class="col-md-6 col-sm-12">
+                                        <div>
                                             <ul class="nav nav-tabs" role="tablist">
                                                 <?php foreach ($restConfig['examples'] as $index => $lang): ?>
                                                     <li class="nav-item">
                                                         <a class="nav-link <?= $index == 0 ? 'active' : '' ?>"
                                                            data-toggle="tab"
-                                                           href="#<?= 't-' . sha1($endpoint['url'] . $lang) ?>"
+                                                           href="#<?= 'tab-' . sha1($endpoint['url'] . $lang) ?>"
                                                            role="tab"><?= $lang ?></a>
                                                     </li>
                                                 <?php endforeach; ?>
@@ -178,20 +178,22 @@ $restMethods   = [
                                             <div class="tab-content">
                                                 <?php foreach ($restConfig['examples'] as $index => $lang): ?>
                                                     <div class="tab-pane <?= $index == 0 ? 'active' : '' ?>"
-                                                         id="<?= 't-' . sha1($endpoint['url'] . $lang) ?>"
+                                                         id="<?= 'tab-' . sha1($endpoint['url'] . $lang) ?>"
                                                          role="tabpanel">
                                                         <pre><code class="<?= $lang == 'cURL' ? 'bash' : strtolower($lang) ?>"><?= \Rapture\Restdoc\Example::$lang($endpoint, $restConfig['baseUrl']) ?></code></pre>
                                                     </div>
                                                 <?php endforeach; ?>
                                             </div>
-
-                                            <div>
-                                                <strong>HTTP: <?= $endpoint['examples'][0]['response']['code'] ?></strong>
-                                                <pre><code class="json"><?= json_encode($endpoint['examples'][0]['response']['json'], JSON_PRETTY_PRINT) ?></code></pre>
-                                            </div>
                                         </div>
-                                    <?php endif; ?>
-                                </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-sm-12">
+                                        <div>
+                                            <strong>HTTP: <?= $endpoint['example'][0]['response']['code'] ?></strong>
+                                            <pre><code class="json"><?= json_encode($endpoint['example'][0]['response']['json'], JSON_PRETTY_PRINT) ?></code></pre>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
                             </div>
 
                         </div>
@@ -199,7 +201,7 @@ $restMethods   = [
                 <?php endforeach; ?>
 
             <?php endforeach; ?>
-        </main>
+        </div>
     </div>
 </div>
 

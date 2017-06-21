@@ -21,11 +21,11 @@ class Example
      */
     public static function curl(array $endpoint, string $url = 'http://domain.com')
     {
-        if (!isset($endpoint['examples'][0])) {
+        if (!isset($endpoint['example'][0])) {
             return '';
         }
 
-        $example = $endpoint['examples'][0]['request'] + ['headers' => [], 'params' => [], 'query' => []];
+        $example = $endpoint['example'][0]['request'] + ['headers' => [], 'params' => [], 'query' => [], 'body' => []];
 
         $command = $endpoint['method'] != 'GET'
             ? ["curl -X {$endpoint['method']}"]

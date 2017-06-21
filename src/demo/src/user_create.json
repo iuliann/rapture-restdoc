@@ -5,30 +5,37 @@
   "summary": "Create a user",
   "description": "Create user - you must provide an app auth key.",
   "version": "1.0",
-  "params": {
-    "nickname": {
-      "type": "string|array",
-      "format": "string(20)|string(20)[]",
-      "required": true,
-      "default": null,
-      "description": "For multiple nicknames: ['Nick1', 'Nick2']"
+
+  "request": {
+    "body": {
+      "nickname": {
+        "type": "string|array",
+        "format": "string(20)|string(20)[]",
+        "required": true,
+        "default": null,
+        "description": "For multiple nicknames: ['Nick1', 'Nick2']"
+      },
+      "fullname": {
+        "type": "string",
+        "format": "string(100)",
+        "required": true,
+        "description": "User's full name"
+      },
+      "group": {
+        "type": "string",
+        "format": "string(20)",
+        "required": true,
+        "description": "User's group. Possible values: admin|manager|user"
+      }
     },
-    "fullname": {
-      "type": "string",
-      "format": "string(100)",
-      "required": true,
-      "description": "User's full name"
-    },
-    "group": {
-      "type": "string",
-      "format": "string(20)",
-      "required": true,
-      "description": "User's group. Possible values: admin|manager|user"
-    }
+    "params": {},
+    "query": {}
   },
-  "responses": {
-    "201": {
-      "response": [
+
+  "response": [
+    {
+      "code": 201,
+      "json": [
         {
           "id": "ec014a44-554f-11e7-b114-b2f933d5fe66",
           "nickname": "Nick1",
@@ -46,18 +53,22 @@
       ],
       "description": ""
     },
-    "400": {
-      "response": {
-        "message": "Invalid group"
-      },
+    {
+      "code": 400,
+      "json": [
+        {
+          "message": "Invalid group"
+        }
+      ],
       "description": "<div class='alert alert-danger'>Only 'manager' group is currently supported</div>"
     }
-  },
-  "examples": [
+  ],
+
+  "example": [
     {
       "request": {
         "headers": {"X-Auth": "dsa09ak320ede0-awld0a0sdla"},
-        "params": {
+        "body": {
           "nickname": ["Nick1", "Nick2"],
           "fullname": "Nick Doe",
           "group": "admin"

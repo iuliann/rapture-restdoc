@@ -7,36 +7,43 @@
 
   "default": {
     "version": "1.0",
-    "headers": {
-      "X-Auth": {
-        "type": "string",
-        "format": "string(64)",
-        "required": true,
-        "description": "User's auth key"
+
+    "request": {
+      "headers": {
+        "X-Auth": {
+          "type": "string",
+          "format": "string(64)",
+          "required": true,
+          "description": "User's auth key"
+        }
       }
     },
-    "responses": {
-      "401": {
-        "response": {
+
+    "response": [
+      {
+        "code": 401,
+        "json": {
           "error": 401,
           "message": "Unauthorized!"
         },
         "description": "401 Unauthorized"
       },
-      "403": {
-        "response": {
+      {
+        "code": 403,
+        "json": {
           "error": 403,
           "message": "Forbidden!"
         },
         "description": "403 Forbidden"
       },
-      "500": {
-        "response": {
+      {
+        "code": 500,
+        "json": {
           "error": 500,
           "message": "Internal Server Error! Please try again later."
         },
         "description": "500 Internal Server Error"
       }
-    }
+    ]
   }
 }

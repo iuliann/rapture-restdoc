@@ -14,10 +14,11 @@ class Parser
     /**
      * Get files from source
      *
-     * @param string $path Path to source
+     * @param string $path    Path to source
+     * @param array  $generic Generic config to use with all endpoints
      *
-     * @throws \Exception
      * @return array
+     * @throws \Exception
      */
     public function getData(string $path, array $generic = []):array
     {
@@ -30,15 +31,16 @@ class Parser
                     throw new \Exception(json_last_error_msg() . ': ' . (string)$filename);
                 }
 
-                $endpoint += ['query' => [], 'params' => [], 'headers' => [], 'examples' => []];
+                $endpoint['request'] += ['query' => [], 'params' => [], 'headers' => [], 'body' => []];
 
                 $endpoint = array_replace_recursive($generic, $endpoint);
 
-                $endpoint['headers'] = $this->sanitizeParams($endpoint['headers']);
-                $endpoint['params']  = $this->sanitizeParams($endpoint['params']);
-                $endpoint['query']   = $this->sanitizeParams($endpoint['query']);
+                $endpoint['request']['headers'] = $this->sanitizeParams($endpoint['request']['headers']);
+                $endpoint['request']['params']  = $this->sanitizeParams($endpoint['request']['params']);
+                $endpoint['request']['query']   = $this->sanitizeParams($endpoint['request']['query']);
+                $endpoint['request']['body']    = $this->sanitizeParams($endpoint['request']['body']);
 
-                ksort($endpoint['responses']);
+                ksort($endpoint['response']);
 
                 if (isset($endpoint['group'])) {
                     $data[$endpoint['group']][] = $endpoint;
