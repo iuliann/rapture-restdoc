@@ -15,12 +15,12 @@ class Parser
      * Get files from source
      *
      * @param string $path    Path to source
-     * @param array  $generic Generic config to use with all endpoints
+     * @param array  $default Generic config to use with all endpoints
      *
      * @return array
      * @throws \Exception
      */
-    public function getData(string $path, array $generic = []):array
+    public function getData(string $path, array $default = []):array
     {
         $data = [];
         /** @var \SplFileInfo $filename */
@@ -33,7 +33,11 @@ class Parser
 
                 $endpoint['request'] += ['query' => [], 'params' => [], 'headers' => [], 'body' => []];
 
-                $endpoint = array_replace_recursive($generic, $endpoint);
+                // handle ['response']
+                $defaultResponses = isset($default['response']) ? $default['response'] : [];
+                $currentResponses = $endpoint['response'];
+                $endpoint = array_replace_recursive($default, $endpoint);
+                $endpoint['response'] = array_merge($currentResponses, $defaultResponses);
 
                 $endpoint['request']['headers'] = $this->sanitizeParams($endpoint['request']['headers']);
                 $endpoint['request']['params']  = $this->sanitizeParams($endpoint['request']['params']);
@@ -63,11 +67,11 @@ class Parser
     {
         foreach ($params as $name => $data) {
             $params[$name] += [
-                'type'      =>  'int',
-                'format'    =>  'int64',
+                'format'    =>  'integer',
                 'required'  =>  true,
                 'default'   =>  null,
-                'description'=> ''
+                'description'=> null,
+                'example'   =>  null,
             ];
         }
 

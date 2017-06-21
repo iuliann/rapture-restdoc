@@ -43,7 +43,7 @@ class Example
         }
 
         if (in_array($endpoint['method'], ['PUT', 'POST'])) {
-            $command[] = "-d '" . json_encode($example['params'], JSON_PRETTY_PRINT) . "'";
+            $command[] = "-d '" . json_encode($example['body'], JSON_PRETTY_PRINT) . "'";
         }
 
         return implode(" \\\n", $command);

@@ -6,29 +6,26 @@
 $tableRender = function ($params)
 {
     $html = '
-<table class="table table-striped table-hover table-responsive">
+<table class="table table-sm table-striped table-hover table-responsive table-inverse">
     <thead>
         <tr>
             <th>Name</th>
-            <th>Type</th>
             <th>Format</th>
             <th>Required</th>
             <th>Default</th>
             <th>Description</th>
         </tr>
     </thead>
-    <tbody>
-        %s
-    </tbody>
+    <tbody>%s</tbody>
 </table>';
 
     $body = '';
 
     foreach ($params as $name => $data) {
         $data['required'] = $data['required'] ? 'yes' : 'no';
+        $data['default']  = $data['default'] ?? null;
         $body .= "<tr>
-                    <td>{$name}</td>
-                    <td>{$data['type']}</td>
+                    <td><code>{$name}</code></td>
                     <td>{$data['format']}</td>
                     <td>{$data['required']}</td>
                     <td>{$data['default']}</td>
@@ -37,6 +34,26 @@ $tableRender = function ($params)
     }
 
     return sprintf($html, $body);
+};
+
+$filterParams = function ($params, $showAll = false)
+{
+    foreach ($params as $name => $data) {
+        $params[$name] = array_filter($data, function ($value) {
+            return isset($value[0]);
+        });
+
+        if ($showAll) {
+            $params[$name] += [
+                'format'        =>  null,
+                'default'       =>  null,
+                'description'   =>  null,
+                'example'       =>  null
+            ];
+        }
+    }
+
+    return $params;
 };
 
 $restMethods   = [
@@ -96,8 +113,11 @@ $restMethods   = [
                             <div class="row">
                                 <!-- Description -->
                                 <div class="col-md-12 col-sm-12">
+                                    <img src="https://img.shields.io/badge/version-1.0-blue.svg?style=flat-square" />
+
                                     <h3>Description</h3>
-                                    <p><?= $endpoint['description'] ?></p>
+
+                                    <?= $endpoint['description'] ?>
                                 </div>
 
                                 <!-- Request -->
@@ -106,28 +126,44 @@ $restMethods   = [
                                     <?php if (count($endpoint['request']['headers'])): ?>
                                         <div>
                                             <h4>Headers</h4>
-                                            <?= $tableRender($endpoint['request']['headers']) ?>
+                                            <?php if ($restConfig['showTables']): ?>
+                                                <?= $tableRender($endpoint['request']['headers']) ?>
+                                            <?php else: ?>
+                                                <pre><code class="json"><?= json_encode($filterParams($endpoint['request']['headers'], $restConfig['showAllAttributes']), JSON_PRETTY_PRINT) ?></code></pre>
+                                            <?php endif; ?>
                                         </div>
                                     <?php endif; ?>
 
                                     <?php if (count($endpoint['request']['params'])): ?>
                                         <div>
                                             <h4>Parameters</h4>
-                                            <?= $tableRender($endpoint['request']['params']) ?>
+                                            <?php if ($restConfig['showTables']): ?>
+                                                <?= $tableRender($endpoint['request']['params']) ?>
+                                            <?php else: ?>
+                                                <pre><code class="json"><?= json_encode($filterParams($endpoint['request']['params'], $restConfig['showAllAttributes']), JSON_PRETTY_PRINT) ?></code></pre>
+                                            <?php endif; ?>
                                         </div>
                                     <?php endif; ?>
 
                                     <?php if (count($endpoint['request']['body'])): ?>
                                         <div>
                                             <h4>Body</h4>
-                                            <?= $tableRender($endpoint['request']['body']) ?>
+                                            <?php if ($restConfig['showTables']): ?>
+                                                <?= $tableRender($endpoint['request']['body']) ?>
+                                            <?php else: ?>
+                                                <pre><code class="json"><?= json_encode($filterParams($endpoint['request']['body'], $restConfig['showAllAttributes']), JSON_PRETTY_PRINT) ?></code></pre>
+                                            <?php endif; ?>
                                         </div>
                                     <?php endif; ?>
 
                                     <?php if (count($endpoint['request']['query'])): ?>
                                         <div>
                                             <h4>Query</h4>
-                                            <?= $tableRender($endpoint['request']['query']) ?>
+                                            <?php if ($restConfig['showTables']): ?>
+                                                <?= $tableRender($endpoint['request']['query']) ?>
+                                            <?php else: ?>
+                                                <pre><code class="json"><?= json_encode($filterParams($endpoint['request']['query'], $restConfig['showAllAttributes']), JSON_PRETTY_PRINT) ?></code></pre>
+                                            <?php endif; ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>
@@ -135,7 +171,7 @@ $restMethods   = [
                                 <!-- Response -->
                                 <div class="col-md-6 col-sm-12">
                                     <h3>Response</h3>
-                                    <table class="table table-responsive">
+                                    <table class="table table-responsive table-sm">
                                         <thead>
                                             <tr>
                                                 <th>Code</th>
@@ -188,10 +224,23 @@ $restMethods   = [
                                     </div>
 
                                     <div class="col-md-6 col-sm-12">
-                                        <div>
-                                            <strong>HTTP: <?= $endpoint['example'][0]['response']['code'] ?></strong>
-                                            <pre><code class="json"><?= json_encode($endpoint['example'][0]['response']['json'], JSON_PRETTY_PRINT) ?></code></pre>
+                                        <ul class="nav nav-tabs" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active"
+                                                   data-toggle="tab"
+                                                   href="#<?= 'tab-' . sha1($endpoint['url'] . 'example') ?>"
+                                                   role="tab"><?= $endpoint['example'][0]['response']['code'] ?></a>
+                                            </li>
+                                        </ul>
+
+                                        <div class="tab-content">
+                                            <div class="tab-pane active"
+                                                 id="<?= 'tab-' . sha1($endpoint['url'] . 'example') ?>"
+                                                 role="tabpanel">
+                                                <pre><code class="json"><?= json_encode($endpoint['example'][0]['response']['json'], JSON_PRETTY_PRINT) ?></code></pre>
+                                            </div>
                                         </div>
+
                                     </div>
                                 <?php endif; ?>
                             </div>

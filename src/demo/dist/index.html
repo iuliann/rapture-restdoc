@@ -9,18 +9,25 @@
  * Custom
  */
 .endpoint {
-    border: 4px solid #ddd;
+    border: 2px solid #ddd;
     padding: 12px;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
+}
+.endpoint .alert {
+    margin-bottom: 0 !important;
 }
 .hide {
     display: none;
 }
-h4 {
-    margin-top: 2em;
+h3 {
+    margin-top: 1em;
+    margin-bottom: 1em;
 }
 .alert strong {
     color: #000 !important;
+}
+.container-fluid {
+    margin-top: 60px;
 }
 </style>
 </head>
@@ -61,86 +68,51 @@ h4 {
                             <div class="row">
                                 <!-- Description -->
                                 <div class="col-md-12 col-sm-12">
+                                    <img src="https://img.shields.io/badge/version-1.0-blue.svg?style=flat-square" />
+
                                     <h3>Description</h3>
-                                    <p>Create user - you must provide an app auth key.</p>
-                                </div>
+
+                                    Create user - you must provide an app auth key.                                </div>
 
                                 <!-- Request -->
                                 <div class="col-md-6 col-sm-12">
                                     <h3>Request</h3>
                                                                             <div>
                                             <h4>Headers</h4>
-                                            
-<table class="table table-striped table-hover table-responsive">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Format</th>
-            <th>Required</th>
-            <th>Default</th>
-            <th>Description</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-                    <td>X-Auth</td>
-                    <td>string</td>
-                    <td>string(64)</td>
-                    <td>yes</td>
-                    <td></td>
-                    <td>User's auth key</td>
-                </tr>
-    </tbody>
-</table>                                        </div>
+                                                                                            <pre><code class="json">{
+    "X-Auth": {
+        "format": "string(64)",
+        "description": "User's auth key"
+    }
+}</code></pre>
+                                                                                    </div>
                                     
                                     
                                                                             <div>
                                             <h4>Body</h4>
-                                            
-<table class="table table-striped table-hover table-responsive">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Format</th>
-            <th>Required</th>
-            <th>Default</th>
-            <th>Description</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-                    <td>nickname</td>
-                    <td>string|array</td>
-                    <td>string(20)|string(20)[]</td>
-                    <td>yes</td>
-                    <td></td>
-                    <td>For multiple nicknames: ['Nick1', 'Nick2']</td>
-                </tr><tr>
-                    <td>fullname</td>
-                    <td>string</td>
-                    <td>string(100)</td>
-                    <td>yes</td>
-                    <td></td>
-                    <td>User's full name</td>
-                </tr><tr>
-                    <td>group</td>
-                    <td>string</td>
-                    <td>string(20)</td>
-                    <td>yes</td>
-                    <td></td>
-                    <td>User's group. Possible values: admin|manager|user</td>
-                </tr>
-    </tbody>
-</table>                                        </div>
+                                                                                            <pre><code class="json">{
+    "nickname": {
+        "format": "[]string(20)",
+        "description": "For multiple nicknames: ['Nick1', 'Nick2']"
+    },
+    "fullname": {
+        "format": "string(100)",
+        "description": "User's full name",
+        "example": "Mr. John Doe"
+    },
+    "group": {
+        "format": "string(admin|manager|user)",
+        "description": "User's group"
+    }
+}</code></pre>
+                                                                                    </div>
                                     
                                                                     </div>
 
                                 <!-- Response -->
                                 <div class="col-md-6 col-sm-12">
                                     <h3>Response</h3>
-                                    <table class="table table-responsive">
+                                    <table class="table table-responsive table-sm">
                                         <thead>
                                             <tr>
                                                 <th>Code</th>
@@ -152,24 +124,22 @@ h4 {
                                                                                     <tr>
                                                 <th>201</th>
                                                 <td>
-                                                    <pre><code class="json">{
-    "error": 401,
-    "message": "Unauthorized!",
-    "0": {
+                                                    <pre><code class="json">[
+    {
         "id": "ec014a44-554f-11e7-b114-b2f933d5fe66",
         "nickname": "Nick1",
         "fullname": "Nicky Doe",
         "group": "admin",
         "api_key": "dsa09ak320ede0-awld0a0sdla"
     },
-    "1": {
+    {
         "id": "d6a09dfa-554f-11e7-b114-b2f933d5fe66",
         "nickname": "Nick2",
         "fullname": "Nicky Doe",
         "group": "admin",
         "api_key": "dsa09ak320ede0-awld0a0sdla"
     }
-}</code></pre>
+]</code></pre>
                                                 </td>
                                                 <td>
                                                                                                     </td>
@@ -178,15 +148,33 @@ h4 {
                                                 <th>400</th>
                                                 <td>
                                                     <pre><code class="json">{
-    "error": 403,
-    "message": "Forbidden!",
-    "0": {
-        "message": "Invalid group"
-    }
+    "message": "Invalid group"
 }</code></pre>
                                                 </td>
                                                 <td>
                                                     <div class='alert alert-danger'>Only 'manager' group is currently supported</div>                                                </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>401</th>
+                                                <td>
+                                                    <pre><code class="json">{
+    "error": 401,
+    "message": "Unauthorized!"
+}</code></pre>
+                                                </td>
+                                                <td>
+                                                    401 Unauthorized                                                </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>403</th>
+                                                <td>
+                                                    <pre><code class="json">{
+    "error": 403,
+    "message": "Forbidden!"
+}</code></pre>
+                                                </td>
+                                                <td>
+                                                    403 Forbidden                                                </td>
                                             </tr>
                                                                                     <tr>
                                                 <th>500</th>
@@ -237,7 +225,14 @@ http://api.example.com/user \
 -H 'cache-control: no-cache' \
 -H 'content-type: application/json' \
 -H 'X-Auth: dsa09ak320ede0-awld0a0sdla' \
--d '[]'</code></pre>
+-d '{
+    "nickname": [
+        "Nick1",
+        "Nick2"
+    ],
+    "fullname": "Nick Doe",
+    "group": "admin"
+}'</code></pre>
                                                     </div>
                                                                                                     <div class="tab-pane "
                                                          id="tab-65ef16fcdbc0f35e2e7b02dc59c4e673753fb94e"
@@ -254,9 +249,20 @@ http://api.example.com/user \
                                     </div>
 
                                     <div class="col-md-6 col-sm-12">
-                                        <div>
-                                            <strong>HTTP: 201</strong>
-                                            <pre><code class="json">[
+                                        <ul class="nav nav-tabs" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active"
+                                                   data-toggle="tab"
+                                                   href="#tab-2725be409fc8dca7a9b59d75c5d73255c9250b6b"
+                                                   role="tab">201</a>
+                                            </li>
+                                        </ul>
+
+                                        <div class="tab-content">
+                                            <div class="tab-pane active"
+                                                 id="tab-2725be409fc8dca7a9b59d75c5d73255c9250b6b"
+                                                 role="tabpanel">
+                                                <pre><code class="json">[
     {
         "id": "ec014a44-554f-11e7-b114-b2f933d5fe66",
         "nickname": "Nick1",
@@ -272,7 +278,9 @@ http://api.example.com/user \
         "api_key": "dsa09ak320ede0-awld0a0sdla"
     }
 ]</code></pre>
+                                            </div>
                                         </div>
+
                                     </div>
                                                             </div>
 

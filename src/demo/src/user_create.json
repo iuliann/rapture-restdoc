@@ -9,23 +9,20 @@
   "request": {
     "body": {
       "nickname": {
-        "type": "string|array",
-        "format": "string(20)|string(20)[]",
+        "format": "[]string(20)",
         "required": true,
-        "default": null,
         "description": "For multiple nicknames: ['Nick1', 'Nick2']"
       },
       "fullname": {
-        "type": "string",
         "format": "string(100)",
         "required": true,
-        "description": "User's full name"
+        "description": "User's full name",
+        "example": "Mr. John Doe"
       },
       "group": {
-        "type": "string",
-        "format": "string(20)",
+        "format": "string(admin|manager|user)",
         "required": true,
-        "description": "User's group. Possible values: admin|manager|user"
+        "description": "User's group"
       }
     },
     "params": {},
@@ -55,11 +52,9 @@
     },
     {
       "code": 400,
-      "json": [
-        {
-          "message": "Invalid group"
-        }
-      ],
+      "json": {
+        "message": "Invalid group"
+      },
       "description": "<div class='alert alert-danger'>Only 'manager' group is currently supported</div>"
     }
   ],

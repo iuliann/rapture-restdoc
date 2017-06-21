@@ -4,6 +4,8 @@
   "description": "REST API project description",
   "baseUrl": "http://api.example.com",
   "examples": ["cURL", "PHP", "Go"],
+  "showTables": false,
+  "showAllAttributes": false,
 
   "default": {
     "version": "1.0",
@@ -11,7 +13,6 @@
     "request": {
       "headers": {
         "X-Auth": {
-          "type": "string",
           "format": "string(64)",
           "required": true,
           "description": "User's auth key"
