@@ -31,6 +31,12 @@ class Example
             ? ["curl -X {$endpoint['method']}"]
             : ['curl'];
 
+        if (count($example['params'])) {
+            foreach ($example['params'] as $name => $value) {
+                $endpoint['url'] = str_replace('{' . $name . '}', $value, $endpoint['url']);
+            }
+        }
+
         $command[] = $example['query']
             ? $url . $endpoint['url'] . '?' . http_build_query($example['query'])
             : $url . $endpoint['url'];
