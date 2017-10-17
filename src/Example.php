@@ -25,7 +25,7 @@ class Example
             return '';
         }
 
-        $example = $endpoint['example'][0]['request'] + ['headers' => [], 'params' => [], 'query' => [], 'body' => []];
+        $example = $endpoint['example'][0]['request'] + ['headers' => [], 'params' => [], 'query' => [], 'body' => [], 'url' => ''];
 
         $command = $endpoint['method'] != 'GET'
             ? ["curl -X {$endpoint['method']}"]
@@ -38,8 +38,8 @@ class Example
         }
 
         $command[] = $example['query']
-            ? $url . $endpoint['url'] . '?' . http_build_query($example['query'])
-            : $url . $endpoint['url'];
+            ? $url . ($example['url'] ?: $endpoint['url'] . '?' . http_build_query($example['query']))
+            : $url . ($example['url'] ?: $endpoint['url']);
 
         $command[] = "-H 'cache-control: no-cache'";
         $command[] = "-H 'content-type: application/json'";
