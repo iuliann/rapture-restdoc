@@ -15,7 +15,7 @@ Check ./demo/src/*.json files for examples.
 ## Install
 
 ```
-composer require iuliann/rapture-restdoc
+composer require mrjulio/rapture-restdoc
 ```
 
 ## Quick start
